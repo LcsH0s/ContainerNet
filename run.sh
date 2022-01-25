@@ -1,2 +1,1 @@
-docker start web-ctn
-docker start flaskapp-ctn
+docker compose up

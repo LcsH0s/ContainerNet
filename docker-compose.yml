@@ -1,0 +1,31 @@
+version: "latest"
+
+services:
+  web-ddx:
+    build:
+      context: ./
+      dockerfile: ./docker/web/Dockerfile
+    
+    ports:
+      - "8080:80"
+
+    networks:
+      - ddx-net
+
+  flaskapp-ddx:
+    build:
+      context: ./
+      dockerfile: ./docker/api/Dockerfile
+    
+    ports:
+      - "5050:5050"
+    
+    networks:
+      - ddx-net
+
+networks:
+  ddx-net:
+    name: ddx-net
+    driver: bridge
+
+    
