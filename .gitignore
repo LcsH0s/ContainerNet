@@ -129,7 +129,7 @@ dmypy.json
 .pyre/
 
 # duplicates
-docker/api/flaskapp/
+docker/api/flaskapp/*
 
 # useless macOS files
 *.DS_Store
