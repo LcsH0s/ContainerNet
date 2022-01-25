@@ -1,1 +1,2 @@
-docker start web-ctn-dck
+docker start web-ctn
+docker start flaskapp-ctn
