@@ -7,8 +7,6 @@ from flask import Flask, jsonify
 
 app = Flask(__name__)
 
-# oui
-
 @app.route('/', methods=['GET'])
 
 def query_records():
