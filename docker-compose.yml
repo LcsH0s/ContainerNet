@@ -1,17 +1,16 @@
 version: "latest"
 
 services:
-  #  web-ddx:
-  #    build:
-  #      context: ./
-  #      dockerfile: ./docker/web/Dockerfile
+  web-ddx:
+    build:
+      context: ./
+      dockerfile: ./docker/web/Dockerfile
 
-  #    ports:
-  #      - "8080:80"
+    ports:
+      - "8080:80"
 
-  #    networks:
-  #      - ddx-net
-
+    networks:
+      - ddx-net
   flaskapp-ddx:
     build:
       context: ./

@@ -23,7 +23,8 @@ def def_api_root():
 @app.route('/dashboard/', methods=['GET'])
 
 def def_dashboard_root():
-    return "ui"
+    index = open('flaskapp/templates/index.html')
+    return index.read()
 
 if __name__ == '__main__':
       app.run(host='0.0.0.0', port=5050, ssl_context=('/flaskapp/certs/cert.pem', '/flaskapp/certs/key.pem'), debug=True)
