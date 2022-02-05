@@ -14,13 +14,11 @@ def query_records():
     return "yes"
 
 
-
 @app.route('/', methods=['POST'])
 
 def addBotToken():
     return "yes"
     
-
 
 if __name__ == '__main__':
       app.run(host='0.0.0.0', port=5050)
