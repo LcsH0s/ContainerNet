@@ -1,11 +1,11 @@
-const api = "http://localhost:5050";
+const api = "https://localhost:5050";
 
-window.onload = function () {
+window.onload = async function () {
   console.log("logged in!");
 
-  fetch(api)
+  await fetch(api)
     .then((data) => {
-      return data.json();
+      return data;
     })
     .then((res) => {
       console.log(res);

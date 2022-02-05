@@ -2,6 +2,7 @@
 # encoding: utf-8
 
 import json
+from multiprocessing import context
 import os
 from requests import request
 from flask import Flask, jsonify
@@ -10,16 +11,20 @@ app = Flask(__name__)
 
 @app.route('/', methods=['GET'])
 
-def query_records():
-    return "yes"
+def def_root():
+    return "main but there is nothing here lol"
+
+@app.route('/api/', methods=['GET'])
+
+def def_api_root():
+    return "api"
 
 
-@app.route('/', methods=['POST'])
+@app.route('/dashboard/', methods=['GET'])
 
-def addBotToken():
-    return "yes"
-    
+def def_dashboard_root():
+    return "ui"
 
 if __name__ == '__main__':
-      app.run(host='0.0.0.0', port=5050)
+      app.run(host='0.0.0.0', port=5050, ssl_context=('/flaskapp/certs/cert.pem', '/flaskapp/certs/key.pem'), debug=True)
 
