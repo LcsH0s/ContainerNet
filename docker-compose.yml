@@ -11,6 +11,10 @@ services:
 
     networks:
       - ddx-net
+
+    volumes:
+      - ./docker/web/public_html:/usr/local/apache2/htdocs:r
+
   flaskapp-ddx:
     build:
       context: ./
@@ -21,6 +25,9 @@ services:
 
     networks:
       - ddx-net
+
+    volumes:
+      - ./bots:/bots:r
 
 networks:
   ddx-net:
