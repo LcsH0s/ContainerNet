@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # encoding: utf-8
 
-TEST_TOKEN = "OTM5OTc0NzE4MDk2ODE4MTc2.YgAprA.k2qt8S6UPH_snFEfGnxbS60TeVQ"
+TEST_TOKEN = "OTM5OTc0NzE4MDk2ODE4MTc2.YgAprA.nBwsdDhEmfOoEKHJLGvdmXwsDxg"
 
 from time import time
 import discord
