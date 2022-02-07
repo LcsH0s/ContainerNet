@@ -2,3 +2,5 @@ flask
 requests
 pyopenssl
 flask-cors
+discord
+discord-py-slash-command

@@ -1,5 +1,6 @@
 
 import subprocess
+import sys
 
 
 class Bot():
@@ -7,13 +8,13 @@ class Bot():
         self.token = token
         self.path = path
         self.name = name
-        self.thread
+        self.thread = None
 
 
 class BotManager():
     def __init__(self) -> None:
         self.bots = []
-        self.activeBots = []
+        self.onlineBots = []
         self.offlineBots = []
     
     def add(self, name:str, path:str, token:str) -> None:
@@ -22,7 +23,7 @@ class BotManager():
     def start(self, name:str) -> None:
         if (self.getBotbyName(name) != None):
             bot:Bot = self.getBotbyName(name)
-            bot.thread = subprocess.Popen(['/bin/bash', 'python3 /bots/test/main.py'])
+            bot.thread = subprocess.Popen(['/bin/bash',f'{bot.path}run.sh',f'{bot.path}'])
         
     
     def getNames(self) -> list:
@@ -34,3 +35,8 @@ class BotManager():
             if (b.name == name):
                 return b
         return None
+    
+    def countOnlineBots(self) -> int:
+        return len(self.onlineBots)
+    
+    
