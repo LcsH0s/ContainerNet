@@ -135,4 +135,4 @@ docker/api/flaskapp/
 .DS_Store
 
 # bots
-./bots/*
+bots/*
