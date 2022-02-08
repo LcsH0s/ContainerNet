@@ -133,3 +133,6 @@ docker/api/flaskapp/
 
 # useless macOS files
 .DS_Store
+
+# bots
+./bots/*
