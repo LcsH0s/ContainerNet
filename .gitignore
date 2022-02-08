@@ -128,9 +128,6 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-# duplicates
-docker/api/flaskapp/
-
 # useless macOS files
 .DS_Store
 
