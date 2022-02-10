@@ -4,3 +4,4 @@ pyopenssl
 flask-cors
 discord
 discord-py-slash-command
+docker
