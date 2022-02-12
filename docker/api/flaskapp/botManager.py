@@ -1,9 +1,9 @@
+from distutils.log import fatal
+from random import random
 import docker
 
 from os import mkdir
 from distutils.dir_util import copy_tree
-
-WORKDIR = '/Users/lucasdecastro/Documents/XPROG/ContainerNet'
 
 
 class BotContainer():
@@ -14,8 +14,9 @@ class BotContainer():
         self.client = client
         self.container = None
         self.path = path
-        self.name = 'ddx-' + name
-        self.docker_context = f'{WORKDIR}/tmp/dockerfiles/{self.name}'
+        self.name = name
+        self.ctn_name = 'ddx-' + name
+        self.docker_context = f'/tmp/dockerfiles/{self.ctn_name}'
         self.status = self.STATUS_OFFLINE
         self.img_name = f'{self.name}_img'
         self.token = token
@@ -35,27 +36,34 @@ class BotContainer():
         self.client.images.build(path=self.docker_context, tag=self.img_name)
 
         try:
-            self.client.containers.get(self.name).remove(force=True)
+            self.client.containers.get(self.ctn_name).remove(force=True)
         except docker.errors.NotFound:
             pass
 
         self.container = self.client.containers.create(
             image=self.img_name,
-            name=self.name,
-            environment=[f'BOT_TOKEN={self.token}']
-        )
+            name=self.ctn_name,
+            environment=[f'BOT_TOKEN={self.token}'],
+            network_mode='bridge',
+            auto_remove=True)
 
     def start(self):
         self.container.start()
+        self.status = self.STATUS_ONLINE
 
     def stop(self):
         self.container.stop()
+        self.status = self.STATUS_OFFLINE
 
 
 class BotManager():
     def __init__(self) -> None:
         self.client = docker.from_env()
         self.bot_containers = {}
+        try:
+            mkdir('/tmp/dockerfiles')
+        except FileExistsError:
+            pass
 
     def add(self, context: str, name: str, token: str):
         if (not self.bot_exists(name)):
@@ -80,6 +88,9 @@ class BotManager():
 
     def bot_exists(self, name: str):
         return True if name in self.bot_containers.keys() else False
+
+    def get_online_bots(self):
+        return [bot.name for bot in self.bot_containers.values() if bot.status == BotContainer.STATUS_ONLINE]
 
 
 """
