@@ -1,8 +1,8 @@
 const api = "https://localhost:5050";
 
-function start_bot(name) {
+function add_bot(name) {
   (async () => {
-    const rawResponse1 = await fetch(api + "/discord/manage/add", {
+    const rawResponse = await fetch(api + "/discord/manage/add", {
       method: "POST",
       headers: {
         Accept: "text/plain",
@@ -14,7 +14,16 @@ function start_bot(name) {
         name: "test",
       }),
     });
-    const rawResponse2 = await fetch(api + "/discord/manage/start", {
+
+    rawResponse.text().then(function (text) {
+      console.log(text);
+    });
+  })();
+}
+
+function start_bot(name) {
+  (async () => {
+    const rawResponse = await fetch(api + "/discord/manage/start", {
       method: "POST",
       headers: {
         Accept: "text/plain",
@@ -24,10 +33,8 @@ function start_bot(name) {
         name: "test",
       }),
     });
-    rawResponse1.text().then(function (text) {
-      console.log(text);
-    });
-    rawResponse2.text().then(function (text) {
+
+    rawResponse.text().then(function (text) {
       console.log(text);
     });
   })();

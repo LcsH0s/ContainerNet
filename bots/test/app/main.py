@@ -24,8 +24,8 @@ slash = SlashCommand(bot, sync_commands=True)
     description="dev test command",
     guild_ids=[858410822590136342]
 )
-async def ping(ctx: SlashContext):
-    ctx.send("pong")
+async def ping(ctx):
+    await ctx.send("pong")
 
 if (__name__ == '__main__'):
     bot.run(TEST_TOKEN)
