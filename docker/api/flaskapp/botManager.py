@@ -3,8 +3,6 @@ import docker
 from os import mkdir
 from distutils.dir_util import copy_tree
 
-WORKDIR = '/Users/lucasdecastro/Documents/XPROG/DDX-Manager'
-
 
 class BotContainer():
     STATUS_ONLINE = "bot_status_online"
@@ -16,7 +14,7 @@ class BotContainer():
         self.path = path
         self.name = name
         self.ctn_name = 'ddx-' + name
-        self.docker_context = f'{WORKDIR}/tmp/dockerfiles/{self.ctn_name}'
+        self.docker_context = f'/tmp/dockerfiles/{self.ctn_name}'
         self.status = self.STATUS_OFFLINE
         self.img_name = f'{self.name}_img'
         self.token = token
@@ -66,7 +64,7 @@ class BotManager():
         self.client = docker.from_env()
         self.bot_containers = {}
         try:
-            mkdir(f'{WORKDIR}/tmp/dockerfiles')
+            mkdir(f'/tmp/dockerfiles')
         except FileExistsError:
             pass
 
@@ -103,10 +101,13 @@ class BotManager():
         raise(KeyError(f'No container with name \'{name}\''))
 
 
-if (__name__ == "__main__"):
-    bm = BotManager()
-    bm.add(context=f'{WORKDIR}/bots/test',
-           name='test',
-           token='OTM5OTc0NzE4MDk2ODE4MTc2.YgAprA.nBwsdDhEmfOoEKHJLGvdmXwsDxg'
-           )
-    bm.start('test')
+"""
+    USAGE EXAMPLE :
+        if (__name__ == "__main__"):
+            bm = BotManager()
+            bm.add(context=f'/bots/test',
+                name='test',
+                token='OTM5OTc0NzE4MDk2ODE4MTc2.YgAprA.nBwsdDhEmfOoEKHJLGvdmXwsDxg'
+                )
+            bm.start('test')
+"""

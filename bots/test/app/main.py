@@ -13,19 +13,15 @@ TEST_TOKEN = environ['BOT_TOKEN']
 # Events handling
 bot = commands.Bot(command_prefix=commands.when_mentioned_or(
     '!'), activity=discord.Game(name="w/ your little sister"), status=discord.Status.do_not_disturb, intents=discord.Intents.all())
+
 slash = SlashCommand(bot, sync_commands=True)
-
-
-@bot.event
-async def on_ready():
-    print("\n<Connection Established>\n<Logged in as {0}>\n".format(bot.user))
-
 
 # Command handling
 
+
 @slash.slash(
-    name="ctf",
-    description="Displays upcomming CTFs",
+    name="ping",
+    description="dev test command",
     guild_ids=[858410822590136342]
 )
 async def ping(ctx: SlashContext):

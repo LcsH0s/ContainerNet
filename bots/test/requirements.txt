@@ -1,0 +1,6 @@
+discord
+requests
+bs4
+numpy
+matplotlib
+discord-py-slash-command
