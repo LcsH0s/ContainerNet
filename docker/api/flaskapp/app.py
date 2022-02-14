@@ -20,13 +20,20 @@ def def_root():
                         token='OTM5OTc0NzE4MDk2ODE4MTc2.YgAprA.nBwsdDhEmfOoEKHJLGvdmXwsDxg'
                         )
         bot_manager.start('test')
-    except ReferenceError:
-        pass
 
-    return "ddx manager api"
+    except ReferenceError as e:
+        return str(e)
+    except Exception as e:
+        return f'Unhandeled error : {e}'
+
+    if not (bot_manager.get_bot_by_name('test').is_running()):
+        raise(ValueError(
+            'Initialization Error : Something went wrong when initializing the bot'))
+
+    return "Success"
 
 
-@app.route('/manage/add', methods=['POST'])
+@app.route('/discord/manage/add', methods=['POST'])
 def api_add():
     request_data = flask.request.get_json()
     try:
@@ -35,21 +42,21 @@ def api_add():
                         name=request_data['name']
                         )
         return 'OK'
-    except Exception:
-        return 'BAD ARGUMENTS'
+    except Exception as e:
+        return f'BAD ARGUMENTS : {e}'
 
 
-@app.route('/manage/start', methods=['POST'])
+@app.route('/discord/manage/start', methods=['POST'])
 def api_start():
     request_data = flask.request.get_json()
     try:
         bot_manager.start(request_data['name'])
         return 'OK'
-    except Exception:
-        return 'BAD NAME'
+    except Exception as e:
+        return f'BAD NAME : {e}'
 
 
-@app.route('/bots/online', methods=['GET'])
+@app.route('/discord/bots/online', methods=['GET'])
 def get_online_bots():
     online = bot_manager.get_online_bots()
     if (online):

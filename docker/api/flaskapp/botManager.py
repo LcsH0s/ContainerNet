@@ -1,9 +1,9 @@
-from distutils.log import fatal
-from random import random
 import docker
 
 from os import mkdir
 from distutils.dir_util import copy_tree
+
+WORKDIR = '/Users/lucasdecastro/Documents/XPROG/DDX-Manager'
 
 
 class BotContainer():
@@ -16,7 +16,7 @@ class BotContainer():
         self.path = path
         self.name = name
         self.ctn_name = 'ddx-' + name
-        self.docker_context = f'/tmp/dockerfiles/{self.ctn_name}'
+        self.docker_context = f'{WORKDIR}/tmp/dockerfiles/{self.ctn_name}'
         self.status = self.STATUS_OFFLINE
         self.img_name = f'{self.name}_img'
         self.token = token
@@ -55,17 +55,22 @@ class BotContainer():
         self.container.stop()
         self.status = self.STATUS_OFFLINE
 
+    def is_running(self) -> bool:
+        if (self.container.status == 'running'):
+            return True
+        return False
+
 
 class BotManager():
     def __init__(self) -> None:
         self.client = docker.from_env()
         self.bot_containers = {}
         try:
-            mkdir('/tmp/dockerfiles')
+            mkdir(f'{WORKDIR}/tmp/dockerfiles')
         except FileExistsError:
             pass
 
-    def add(self, context: str, name: str, token: str):
+    def add(self, context: str, name: str, token: str) -> None:
         if (not self.bot_exists(name)):
             self.bot_containers[name] = BotContainer(
                 self.client, context, name, token)
@@ -74,32 +79,34 @@ class BotManager():
             raise(ReferenceError(
                 f"Container with name '{name}' already exists"))
 
-    def start(self, name: str):
+    def start(self, name: str) -> None:
         if (self.bot_exists(name)):
             self.bot_containers[name].start()
         else:
             raise(KeyError(f'No container with name {name}'))
 
-    def stop(self, name: str):
+    def stop(self, name: str) -> None:
         if (self.bot_exists(name)):
             self.bot_containers[name].stop()
         else:
             raise(KeyError(f'No container with name {name}'))
 
-    def bot_exists(self, name: str):
+    def bot_exists(self, name: str) -> bool:
         return True if name in self.bot_containers.keys() else False
 
-    def get_online_bots(self):
+    def get_online_bots(self) -> list:
         return [bot.name for bot in self.bot_containers.values() if bot.status == BotContainer.STATUS_ONLINE]
 
+    def get_bot_by_name(self, name: str) -> BotContainer:
+        if (self.bot_exists(name)):
+            return self.bot_containers[name]
+        raise(KeyError(f'No container with name \'{name}\''))
 
-"""
-    USAGE EXAMPLE:
-        if (__name__ == "__main__"):
-            bm = BotManager()
-            bm.add(context=f'{WORKDIR}/bots/test',
-                name='test',
-                token='OTM5OTc0NzE4MDk2ODE4MTc2.YgAprA.nBwsdDhEmfOoEKHJLGvdmXwsDxg'
-                )
-            bm.start('test')
-"""
+
+if (__name__ == "__main__"):
+    bm = BotManager()
+    bm.add(context=f'{WORKDIR}/bots/test',
+           name='test',
+           token='OTM5OTc0NzE4MDk2ODE4MTc2.YgAprA.nBwsdDhEmfOoEKHJLGvdmXwsDxg'
+           )
+    bm.start('test')
