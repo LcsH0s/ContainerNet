@@ -5,11 +5,12 @@ import flask
 import json
 from flask_cors import CORS
 
-import botManager
+from botManager import BotManager, BotStatusError
+
 
 app = flask.Flask(__name__)
 CORS(app)
-bot_manager = botManager.BotManager()
+bot_manager = BotManager()
 
 
 @app.route('/', methods=['GET'])
@@ -27,13 +28,13 @@ def def_root():
         return f'Unhandeled error : {e}'
 
     if not (bot_manager.get_bot_by_name('test').is_running()):
-        raise(ValueError(
+        raise(BotStatusError(
             'Initialization Error : Something went wrong when initializing the bot'))
 
     return "Success"
 
 
-@app.route('/discord/manage/add', methods=['POST'])
+@app.route('/discord/bots', methods=['POST'])
 def api_add():
     request_data = flask.request.get_json()
     try:
@@ -46,14 +47,24 @@ def api_add():
         return f'BAD ARGUMENTS : {e}'
 
 
-@app.route('/discord/manage/start', methods=['POST'])
+@app.route('/discord/bots', methods=['PUT'])
 def api_start():
     request_data = flask.request.get_json()
     try:
-        bot_manager.start(request_data['name'])
-        return 'OK'
+        if(request_data['action'] == 'start'):
+            try:
+                bot_manager.start(request_data['name'])
+                return 'OK'
+            except Exception as e:
+                return f'BAD NAME : {e}'
+        elif (request_data['action'] == 'stop'):
+            try:
+                bot_manager.stop(request_data['name'])
+                return 'OK'
+            except Exception as e:
+                return f'BAD NAME : {e}'
     except Exception as e:
-        return f'BAD NAME : {e}'
+        return f'bad action : {e}'
 
 
 @app.route('/discord/bots/online', methods=['GET'])

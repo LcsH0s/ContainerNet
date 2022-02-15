@@ -4,6 +4,13 @@ from os import mkdir
 from distutils.dir_util import copy_tree
 
 
+class BotStatusError(Exception):
+    """Bot Status Error"""
+
+    def __init__(self, *args: object) -> None:
+        super().__init__(*args)
+
+
 class BotContainer():
     STATUS_ONLINE = "bot_status_online"
     STATUS_OFFLINE = "bot_status_offline"
@@ -14,7 +21,7 @@ class BotContainer():
         self.path = path
         self.name = name
         self.ctn_name = 'ddx-' + name
-        self.docker_context = f'/tmp/dockerfiles/{self.ctn_name}'
+        self.docker_context = f'/temp/dockerfiles/{self.ctn_name}'
         self.status = self.STATUS_OFFLINE
         self.img_name = f'{self.name}_img'
         self.token = token
@@ -64,7 +71,7 @@ class BotManager():
         self.client = docker.from_env()
         self.bot_containers = {}
         try:
-            mkdir(f'/tmp/dockerfiles')
+            mkdir(f'/temp/dockerfiles')
         except FileExistsError:
             pass
 
@@ -85,7 +92,10 @@ class BotManager():
 
     def stop(self, name: str) -> None:
         if (self.bot_exists(name)):
-            self.bot_containers[name].stop()
+            if (self.bot_containers[name].status == BotContainer.STATUS_ONLINE):
+                self.bot_containers[name].stop()
+            else:
+                raise()
         else:
             raise(KeyError(f'No container with name {name}'))
 

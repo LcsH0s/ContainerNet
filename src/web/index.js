@@ -3,7 +3,7 @@ const api = "https://localhost:5050";
 function add_bot(name) {
   (async () => {
     const rawResponse = await fetch(api + "/discord/manage/add", {
-      method: "POST",
+      method: "PUT",
       headers: {
         Accept: "text/plain",
         "Content-Type": "application/json",
@@ -24,7 +24,7 @@ function add_bot(name) {
 function start_bot(name) {
   (async () => {
     const rawResponse = await fetch(api + "/discord/manage/start", {
-      method: "POST",
+      method: "PUT",
       headers: {
         Accept: "text/plain",
         "Content-Type": "application/json",
