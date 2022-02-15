@@ -1,9 +1,8 @@
 import docker
 
 from os import mkdir
-
-from ..errors import error
-from ..container import container
+from ..error.error import error
+from ..container.container import container
 
 
 class ContainerManager():
