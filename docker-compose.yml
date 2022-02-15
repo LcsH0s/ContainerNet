@@ -4,7 +4,7 @@ services:
   web-ddx:
     build:
       context: ./
-      dockerfile: ./docker/web/Dockerfile
+      dockerfile: ./web/Dockerfile
 
     ports:
       - "8080:80"
@@ -13,12 +13,12 @@ services:
       - ddx-net
 
     volumes:
-      - ./docker/web/public_html:/usr/local/apache2/htdocs:r
+      - ./web/public_html:/usr/local/apache2/htdocs:r
 
   flaskapp-ddx:
     build:
       context: ./
-      dockerfile: ./docker/api/Dockerfile
+      dockerfile: ./src/api/Dockerfile
 
     ports:
       - "5050:5050"
