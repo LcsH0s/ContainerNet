@@ -1,11 +1,11 @@
-class BotStatusError(Exception):
+class StatusError(Exception):
     """Bot Status Error"""
 
     def __init__(self, *args: object) -> None:
         super().__init__(*args)
 
 
-class BotReferenceError(Exception):
+class ReferenceError(Exception):
     """Bot Status Error"""
 
     def __init__(self, *args: object) -> None:

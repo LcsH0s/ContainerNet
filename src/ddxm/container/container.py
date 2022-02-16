@@ -1,12 +1,16 @@
 import docker
+import docker.errors
+import docker.client
 
 from distutils.dir_util import copy_tree
 from os import mkdir
 
 
-class AppContainer():
-    STATUS_ONLINE = "bot_status_online"
-    STATUS_OFFLINE = "bot_status_offline"
+from .. import manager
+from .. import container
+
+
+class Container():
 
     def __init__(self, client, path: str, name: str, token: str):
         self.client = client
@@ -15,7 +19,7 @@ class AppContainer():
         self.name = name
         self.ctn_name = 'ddx-' + name
         self.docker_context = f'/tmp/dockerfiles/{self.ctn_name}'
-        self.status = self.STATUS_OFFLINE
+        self.status = self.STATUS_EXITED
         self.img_name = f'{self.name}_img'
         self.token = token
 
@@ -46,14 +50,32 @@ class AppContainer():
             auto_remove=True)
 
     def start(self):
-        self.container.start()
-        self.status = self.STATUS_ONLINE
+        try:
+            self.container.start()
+        except docker.errors.APIError as e:
+            raise(e('Api Error'))
+        except Exception as e:
+            raise(e('Already Started'))
+        self.status = self.STATUS_RUNNING
 
     def stop(self):
         self.container.stop()
-        self.status = self.STATUS_OFFLINE
+        self.status = self.STATUS_EXITED
 
-    def is_running(self) -> bool:
-        if (self.container.status == 'running'):
+    async def is_running(self) -> bool:
+        try:
+            self.container = self.client.containers.get(self.ctn_name)
+            if (self.container.status == container.status.STATUS_RUNNING):
+                return True
+            elif
+
+        except docker.errors.NotFound as e:
+            raise ((f'Impossible to access container : {e}'))
+
+    def is_container_valid(self) -> bool:
+        try:
+            self.container = self.client.containers.get(self.ctn_name)
             return True
-        return False
+        except docker.errors.NotFound as e:
+            raise (container.errors.ValidityError(
+                f'Impossible to access container : {e}'))

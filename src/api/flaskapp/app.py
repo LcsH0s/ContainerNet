@@ -1,17 +1,15 @@
 #!/usr/bin/env python
 # encoding: utf-8
-
-
-import flask
-import json
+import ddxm
 from flask_cors import CORS
+import json
+import flask
 
-import ddx
 
 app = flask.Flask(__name__)
 CORS(app)
 
-bot_manager = ddx.manager.ContainerManager()
+bot_manager = ddxm.manager.ContainerManager()
 
 
 @app.route('/', methods=['GET'])
@@ -29,7 +27,7 @@ def def_root():
         return f'Unhandeled error : {e}'
 
     if not (bot_manager.get_bot_by_name('test').is_running()):
-        raise(bot_manager.Error(
+        raise(ddxm.error.BotStatusError(
             'Initialization Error : Something went wrong when initializing the bot'))
 
     return "Success"
