@@ -13,13 +13,13 @@ bot_manager = ddxm.manager.ContainerManager()
 
 
 @app.route('/', methods=['GET'])
-def def_root():
+async def def_root():
     try:
         bot_manager.add(context=f'/bots/test',
                         name='test',
                         token='OTM5OTc0NzE4MDk2ODE4MTc2.YgAprA.nBwsdDhEmfOoEKHJLGvdmXwsDxg'
                         )
-        bot_manager.start('test')
+        await bot_manager.start('test')
 
     except ReferenceError as e:
         return str(e)
@@ -27,7 +27,7 @@ def def_root():
         return f'Unhandeled error : {e}'
 
     if not (bot_manager.get_bot_by_name('test').is_running()):
-        raise(ddxm.error.BotStatusError(
+        raise(ddxm.manager.errors.StatusError(
             'Initialization Error : Something went wrong when initializing the bot'))
 
     return "Success"
