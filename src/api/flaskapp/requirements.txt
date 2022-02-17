@@ -1,4 +1,5 @@
 flask
+Flask[async]
 requests
 pyopenssl
 flask-cors

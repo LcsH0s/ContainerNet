@@ -2,8 +2,7 @@ import docker
 
 from os import mkdir
 
-from . import errors
-from .. import container
+import ddxl
 
 
 class ContainerManager():
@@ -17,7 +16,7 @@ class ContainerManager():
 
     def add(self, context: str, name: str, token: str) -> None:
         if (not self.bot_exists(name)):
-            self.bot_containers[name] = container.Container(
+            self.bot_containers[name] = ddxl.container.Container(
                 self.client, context, name, token)
             self.bot_containers[name].dockerize()
         else:
@@ -27,15 +26,15 @@ class ContainerManager():
     async def start(self, name: str) -> None:
         try:
             await self.get_bot_by_name(name).start()
-        except errors.BotReferenceError as e:
+        except ddxl.manager.ContainerNameError as e:
             raise(e('Impossible to start bot '))
 
     def stop(self, name: str) -> None:
         if (self.bot_exists(name)):
-            if (self.bot_containers[name].status == container.Container.STATUS_RUNNING):
+            if (self.bot_containers[name].status == ddxl.container.status.STATUS_RUNNING):
                 self.bot_containers[name].stop()
             else:
-                raise(errors.BotStatusError("bot is not running"))
+                raise(ddxl.manager.ContainerNameError("bot is not running"))
         else:
             raise(KeyError(f'No container with name {name}'))
 
@@ -43,9 +42,10 @@ class ContainerManager():
         return True if name in self.bot_containers.keys() else False
 
     def get_online_bots(self) -> list:
-        return [bot.name for bot in self.bot_containers.values() if bot.status == container.Container.STATUS_RUNNING]
+        return [bot.name for bot in self.bot_containers.values() if bot.status == ddxl.container.STATUS_RUNNING]
 
-    def get_bot_by_name(self, name: str) -> container.Container:
+    def get_bot_by_name(self, name: str) -> ddxl.container.Container:
         if (self.bot_exists(name) and self.bot_containers[name].is_container_valid()):
             return self.bot_containers[name]
-        raise(errors.BotReferenceError(f'No container with name \'{name}\''))
+        raise(ddxl.manager.ContainerNameError(
+            f'No container with name \'{name}\''))

@@ -1,10 +1,11 @@
 #!/usr/bin/env python
 # encoding: utf-8
-import ddxl
+
 from flask_cors import CORS
 import json
 import flask
 
+import ddxl
 
 app = flask.Flask(__name__)
 CORS(app)
@@ -23,8 +24,6 @@ async def def_root():
 
     except ReferenceError as e:
         return str(e)
-    except Exception as e:
-        return f'Unhandeled error : {e}'
 
     if not (bot_manager.get_bot_by_name('test').is_running()):
         raise(ddxl.manager.errors.StatusError(

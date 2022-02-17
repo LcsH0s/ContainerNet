@@ -6,23 +6,22 @@ from distutils.dir_util import copy_tree
 from os import mkdir
 
 
-from .. import manager
-from . import errors
-from . import status
+import ddxl
 
 
 class Container():
 
     def __init__(self, client, path: str, name: str, token: str):
         self.client = client
-        self.ctn = None
-        self.path = path
         self.name = name
+        self.path = path
+        self.token = token
+        self.ctn = None
+
         self.ctn_name = 'ddx-' + name
         self.docker_context = f'/tmp/dockerfiles/{self.ctn_name}'
-        self.status = self.STATUS_EXITED
+        self.status = ddxl.container.status.STATUS_EXITED
         self.img_name = f'{self.name}_img'
-        self.token = token
 
     def dockerize(self):
         try:
@@ -57,21 +56,21 @@ class Container():
             raise(e('Api Error'))
         except Exception as e:
             raise(e('Already Started'))
-        self.status = self.STATUS_RUNNING
+        self.status = ddxl.container.status.STATUS_RUNNING
 
     def stop(self):
         self.ctn.stop()
-        self.status = self.STATUS_EXITED
+        self.status = ddxl.container.status.STATUS_EXITED
 
-    async def is_running(self) -> bool:
+    def is_running(self) -> bool:
         try:
             self.ctn = self.client.containers.get(self.ctn_name)
-            if (self.ctn.status == status.STATUS_RUNNING):
+            if (self.ctn.status == ddxl.container.status.STATUS_RUNNING):
                 return True
             else:
                 return False
         except docker.errors.NotFound as e:
-            raise(manager.errors.ReferenceError(
+            raise(ddxl.manager.errors.ReferenceError(
                 f'Impossible to access container : {e}'))
 
     def is_container_valid(self) -> bool:
@@ -79,5 +78,5 @@ class Container():
             self.ctn = self.client.containers.get(self.ctn_name)
             return True
         except docker.errors.NotFound as e:
-            raise (errors.ValidityError(
+            raise (ddxl.errors.ValidityError(
                 f'Impossible to access container : {e}'))
